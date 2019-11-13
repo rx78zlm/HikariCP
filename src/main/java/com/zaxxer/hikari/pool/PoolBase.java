@@ -17,6 +17,7 @@
 package com.zaxxer.hikari.pool;
 
 import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.metrics.IMetricsExecute;
 import com.zaxxer.hikari.metrics.IMetricsTracker;
 import com.zaxxer.hikari.pool.HikariPool.PoolInitializationException;
 import com.zaxxer.hikari.util.DriverDataSource;
@@ -54,6 +55,7 @@ abstract class PoolBase
 
    public final HikariConfig config;
    IMetricsTrackerDelegate metricsTracker;
+   IMetricsExecute metricsExecute;
 
    protected final String poolName;
 
@@ -190,6 +192,10 @@ abstract class PoolBase
    public DataSource getUnwrappedDataSource()
    {
       return dataSource;
+   }
+
+   public IMetricsExecute getMetricsExecute() {
+      return metricsExecute;
    }
 
    // ***********************************************************************

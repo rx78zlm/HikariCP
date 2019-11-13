@@ -25,47 +25,110 @@ import java.sql.SQLException;
  *
  * @author Brett Wooldridge
  */
-public abstract class ProxyPreparedStatement extends ProxyStatement implements PreparedStatement
-{
-   ProxyPreparedStatement(ProxyConnection connection, PreparedStatement statement)
-   {
+public abstract class ProxyPreparedStatement extends ProxyStatement implements PreparedStatement {
+
+   private String sql;
+
+   ProxyPreparedStatement(ProxyConnection connection, PreparedStatement statement, String sql) {
       super(connection, statement);
+      this.sql = sql;
    }
 
    // **********************************************************************
    //              Overridden java.sql.PreparedStatement Methods
    // **********************************************************************
 
-   /** {@inheritDoc} */
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public boolean execute() throws SQLException
-   {
-      connection.markCommitStateDirty();
-      return ((PreparedStatement) delegate).execute();
+   public boolean execute() throws SQLException {
+      if (connection.getPoolEntry().getMetricsExecute() == null) {
+         return ((PreparedStatement) delegate).execute();
+      } else {
+         long start = System.currentTimeMillis();
+         try {
+            connection.markCommitStateDirty();
+            connection.getPoolEntry().getMetricsExecute().markExecute(sql);
+            return ((PreparedStatement) delegate).execute();
+         } catch (SQLException e) {
+            connection.getPoolEntry().getMetricsExecute().markExecuteErr(sql);
+            throw e;
+         } finally {
+            long elapsed = System.currentTimeMillis() - start;
+            connection.getPoolEntry().getMetricsExecute().markElapsed(sql, elapsed);
+         }
+      }
    }
 
-   /** {@inheritDoc} */
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public ResultSet executeQuery() throws SQLException
-   {
-      connection.markCommitStateDirty();
-      ResultSet resultSet = ((PreparedStatement) delegate).executeQuery();
-      return ProxyFactory.getProxyResultSet(connection, this, resultSet);
+   public ResultSet executeQuery() throws SQLException {
+      if (connection.getPoolEntry().getMetricsExecute() == null) {
+         ResultSet resultSet = ((PreparedStatement) delegate).executeQuery();
+         return ProxyFactory.getProxyResultSet(connection, this, resultSet);
+      } else {
+         long start = System.currentTimeMillis();
+         try {
+            connection.markCommitStateDirty();
+            connection.getPoolEntry().getMetricsExecute().markExecute(sql);
+            ResultSet resultSet = ((PreparedStatement) delegate).executeQuery();
+            return ProxyFactory.getProxyResultSet(connection, this, resultSet);
+         } catch (SQLException e) {
+            connection.getPoolEntry().getMetricsExecute().markExecuteErr(sql);
+            throw e;
+         } finally {
+            long elapsed = System.currentTimeMillis() - start;
+            connection.getPoolEntry().getMetricsExecute().markElapsed(sql, elapsed);
+         }
+      }
    }
 
-   /** {@inheritDoc} */
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public int executeUpdate() throws SQLException
-   {
-      connection.markCommitStateDirty();
-      return ((PreparedStatement) delegate).executeUpdate();
+   public int executeUpdate() throws SQLException {
+      if (connection.getPoolEntry().getMetricsExecute() == null) {
+         return ((PreparedStatement) delegate).executeUpdate();
+      } else {
+         long start = System.currentTimeMillis();
+         try {
+            connection.markCommitStateDirty();
+            connection.getPoolEntry().getMetricsExecute().markExecute(sql);
+            return ((PreparedStatement) delegate).executeUpdate();
+         } catch (SQLException e) {
+            connection.getPoolEntry().getMetricsExecute().markExecuteErr(sql);
+            throw e;
+         } finally {
+            long elapsed = System.currentTimeMillis() - start;
+            connection.getPoolEntry().getMetricsExecute().markElapsed(sql, elapsed);
+         }
+      }
    }
 
-   /** {@inheritDoc} */
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public long executeLargeUpdate() throws SQLException
-   {
-      connection.markCommitStateDirty();
-      return ((PreparedStatement) delegate).executeLargeUpdate();
+   public long executeLargeUpdate() throws SQLException {
+      if (connection.getPoolEntry().getMetricsExecute() == null) {
+         return ((PreparedStatement) delegate).executeLargeUpdate();
+      } else {
+         long start = System.currentTimeMillis();
+         try {
+            connection.markCommitStateDirty();
+            connection.getPoolEntry().getMetricsExecute().markExecute(sql);
+            return ((PreparedStatement) delegate).executeLargeUpdate();
+         } catch (SQLException e) {
+            connection.getPoolEntry().getMetricsExecute().markExecuteErr(sql);
+            throw e;
+         } finally {
+            long elapsed = System.currentTimeMillis() - start;
+            connection.getPoolEntry().getMetricsExecute().markElapsed(sql, elapsed);
+         }
+      }
    }
 }

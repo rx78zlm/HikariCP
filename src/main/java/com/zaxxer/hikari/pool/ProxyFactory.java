@@ -57,13 +57,13 @@ public final class ProxyFactory
       throw new IllegalStateException("You need to run the CLI build and you need target/classes in your classpath to run.");
    }
 
-   static CallableStatement getProxyCallableStatement(final ProxyConnection connection, final CallableStatement statement)
+   static CallableStatement getProxyCallableStatement(final ProxyConnection connection, final CallableStatement statement, String sql)
    {
       // Body is replaced (injected) by JavassistProxyFactory
       throw new IllegalStateException("You need to run the CLI build and you need target/classes in your classpath to run.");
    }
 
-   static PreparedStatement getProxyPreparedStatement(final ProxyConnection connection, final PreparedStatement statement)
+   static PreparedStatement getProxyPreparedStatement(final ProxyConnection connection, final PreparedStatement statement, String sql)
    {
       // Body is replaced (injected) by JavassistProxyFactory
       throw new IllegalStateException("You need to run the CLI build and you need target/classes in your classpath to run.");

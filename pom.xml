@@ -30,7 +30,7 @@
 
    <groupId>com.zaxxer</groupId>
    <artifactId>HikariCP</artifactId>
-   <version>3.4.2-SNAPSHOT</version>
+   <version>3.4.3</version>
    <packaging>bundle</packaging>
 
    <name>HikariCP</name>
@@ -263,93 +263,93 @@
             </configuration>
          </plugin>
 
-         <plugin>
-            <!-- The Docker Maven plugin is used to create docker image with the fat jar -->
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>${docker.maven.plugin.fabric8.version}</version>
-            <configuration>
-               <logDate>default</logDate>
-               <autoPull>true</autoPull>
-               <images>
-                  <!-- Postgres Image is used 'as-is' and iked into the service s linimage -->
-                  <image>
-                     <alias>db</alias>
-                     <name>postgres:9</name>
-                     <run>
-                        <wait>
-                           <log>database system is ready to accept connections</log>
-                           <time>20000</time>
-                        </wait>
-                        <log>
-                           <prefix>DB</prefix>
-                           <color>yellow</color>
-                        </log>
-                     </run>
-                  </image>
-               </images>
-            </configuration>
+         <!--<plugin>-->
+            <!--&lt;!&ndash; The Docker Maven plugin is used to create docker image with the fat jar &ndash;&gt;-->
+            <!--<groupId>io.fabric8</groupId>-->
+            <!--<artifactId>docker-maven-plugin</artifactId>-->
+            <!--<version>${docker.maven.plugin.fabric8.version}</version>-->
+            <!--<configuration>-->
+               <!--<logDate>default</logDate>-->
+               <!--<autoPull>true</autoPull>-->
+               <!--<images>-->
+                  <!--&lt;!&ndash; Postgres Image is used 'as-is' and iked into the service s linimage &ndash;&gt;-->
+                  <!--<image>-->
+                     <!--<alias>db</alias>-->
+                     <!--<name>postgres:9</name>-->
+                     <!--<run>-->
+                        <!--<wait>-->
+                           <!--<log>database system is ready to accept connections</log>-->
+                           <!--<time>20000</time>-->
+                        <!--</wait>-->
+                        <!--<log>-->
+                           <!--<prefix>DB</prefix>-->
+                           <!--<color>yellow</color>-->
+                        <!--</log>-->
+                     <!--</run>-->
+                  <!--</image>-->
+               <!--</images>-->
+            <!--</configuration>-->
 
-            <!-- Hooking into the lifecycle -->
-            <executions>
-               <execution>
-                  <id>start</id>
-                  <phase>pre-integration-test</phase>
-                  <goals>
-                     <goal>build</goal>
-                     <goal>start</goal>
-                  </goals>
-               </execution>
-               <execution>
-                  <id>stop</id>
-                  <phase>post-integration-test</phase>
-                  <goals>
-                     <goal>stop</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
+            <!--&lt;!&ndash; Hooking into the lifecycle &ndash;&gt;-->
+            <!--<executions>-->
+               <!--<execution>-->
+                  <!--<id>start</id>-->
+                  <!--<phase>pre-integration-test</phase>-->
+                  <!--<goals>-->
+                     <!--<goal>build</goal>-->
+                     <!--<goal>start</goal>-->
+                  <!--</goals>-->
+               <!--</execution>-->
+               <!--<execution>-->
+                  <!--<id>stop</id>-->
+                  <!--<phase>post-integration-test</phase>-->
+                  <!--<goals>-->
+                     <!--<goal>stop</goal>-->
+                  <!--</goals>-->
+               <!--</execution>-->
+            <!--</executions>-->
+         <!--</plugin>-->
 
-         <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.2</version>
-            <executions>
-               <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the Surefire plugin is executed. -->
-               <execution>
-                  <goals>
-                     <goal>prepare-agent</goal>
-                  </goals>
-                  <configuration>
-                     <!-- Sets the path to the file which contains the execution data. -->
-                     <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
-                     <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
-                     <propertyName>surefireArgLine</propertyName>
-                     <excludes>
-                        <exclude>**/com/zaxxer/hikari/util/JavassistProxyFactory*</exclude>
-                        <exclude>**/com/zaxxer/hikari/pool/HikariProxy*</exclude>
-                        <exclude>**/com/zaxxer/hikari/metrics/**</exclude>
-                     </excludes>
-                  </configuration>
-               </execution>
-               <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run. -->
-               <execution>
-                  <id>report</id>
-                  <phase>test</phase>
-                  <goals>
-                     <goal>report</goal>
-                  </goals>
-                  <configuration>
-                     <!-- Sets the path to the file which contains the execution data. -->
-                     <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
-                     <excludes>
-                        <exclude>**/com/zaxxer/hikari/pool/HikariProxy*</exclude>
-                        <exclude>**/com/zaxxer/hikari/metrics/**</exclude>
-                     </excludes>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
+         <!--<plugin>-->
+            <!--<groupId>org.jacoco</groupId>-->
+            <!--<artifactId>jacoco-maven-plugin</artifactId>-->
+            <!--<version>0.8.2</version>-->
+            <!--<executions>-->
+               <!--&lt;!&ndash; Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the Surefire plugin is executed. &ndash;&gt;-->
+               <!--<execution>-->
+                  <!--<goals>-->
+                     <!--<goal>prepare-agent</goal>-->
+                  <!--</goals>-->
+                  <!--<configuration>-->
+                     <!--&lt;!&ndash; Sets the path to the file which contains the execution data. &ndash;&gt;-->
+                     <!--<destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>-->
+                     <!--&lt;!&ndash; Sets the name of the property containing the settings for JaCoCo runtime agent. &ndash;&gt;-->
+                     <!--<propertyName>surefireArgLine</propertyName>-->
+                     <!--<excludes>-->
+                        <!--<exclude>**/com/zaxxer/hikari/util/JavassistProxyFactory*</exclude>-->
+                        <!--<exclude>**/com/zaxxer/hikari/pool/HikariProxy*</exclude>-->
+                        <!--<exclude>**/com/zaxxer/hikari/metrics/**</exclude>-->
+                     <!--</excludes>-->
+                  <!--</configuration>-->
+               <!--</execution>-->
+               <!--&lt;!&ndash; Ensures that the code coverage report for unit tests is created after unit tests have been run. &ndash;&gt;-->
+               <!--<execution>-->
+                  <!--<id>report</id>-->
+                  <!--<phase>test</phase>-->
+                  <!--<goals>-->
+                     <!--<goal>report</goal>-->
+                  <!--</goals>-->
+                  <!--<configuration>-->
+                     <!--&lt;!&ndash; Sets the path to the file which contains the execution data. &ndash;&gt;-->
+                     <!--<dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>-->
+                     <!--<excludes>-->
+                        <!--<exclude>**/com/zaxxer/hikari/pool/HikariProxy*</exclude>-->
+                        <!--<exclude>**/com/zaxxer/hikari/metrics/**</exclude>-->
+                     <!--</excludes>-->
+                  <!--</configuration>-->
+               <!--</execution>-->
+            <!--</executions>-->
+         <!--</plugin>-->
 
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -416,6 +416,26 @@
                </execution>
             </executions>
          </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <!--<configuration>-->
+            <!-- outputDirectory>/absolute/path/to/the/output/directory</outputDirectory>
+               <finalName>filename-of-generated-jar-file</finalName -->
+            <!--<attach>true</attach>-->
+            <!--</configuration>-->
+            <executions>
+               <execution>
+                  <id>attach-sources</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>jar-no-fork</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
 
       <pluginManagement>
@@ -448,9 +468,9 @@
                <version>2.22.1</version>
                <configuration>
                   <!-- Sets the VM argument line used when unit tests are run. -->
-                  <argLine>${surefireArgLine} ${sureFireOptions9}</argLine>
+                  <!--<argLine>${surefireArgLine} ${sureFireOptions9}</argLine>-->
                   <!-- Skips unit tests if the value of skip.unit.tests property is true -->
-                  <skipTests>${skip.unit.tests}</skipTests>
+                  <skipTests>true</skipTests>
                   <reuseForks>${sureFireForks9}</reuseForks>
                </configuration>
             </plugin>
@@ -459,16 +479,17 @@
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-source-plugin</artifactId>
                <version>3.0.1</version>
-               <configuration>
+               <!--<configuration>-->
                   <!-- outputDirectory>/absolute/path/to/the/output/directory</outputDirectory>
                      <finalName>filename-of-generated-jar-file</finalName -->
-                  <attach>true</attach>
-               </configuration>
+                  <!--<attach>true</attach>-->
+               <!--</configuration>-->
                <executions>
                   <execution>
                      <id>attach-sources</id>
+                     <phase>package</phase>
                      <goals>
-                        <goal>jar</goal>
+                        <goal>jar-no-fork</goal>
                      </goals>
                   </execution>
                </executions>

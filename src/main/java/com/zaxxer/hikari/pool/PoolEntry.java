@@ -15,6 +15,7 @@
  */
 package com.zaxxer.hikari.pool;
 
+import com.zaxxer.hikari.metrics.IMetricsExecute;
 import com.zaxxer.hikari.util.ConcurrentBag.IConcurrentBagEntry;
 import com.zaxxer.hikari.util.FastList;
 import org.slf4j.Logger;
@@ -161,6 +162,10 @@ final class PoolEntry implements IConcurrentBagEntry
    public void setState(int update)
    {
       stateUpdater.set(this, update);
+   }
+
+   public IMetricsExecute getMetricsExecute() {
+      return this.hikariPool.getMetricsExecute();
    }
 
    Connection close()

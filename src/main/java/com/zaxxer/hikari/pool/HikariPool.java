@@ -20,9 +20,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariPoolMXBean;
+import com.zaxxer.hikari.metrics.MetricsExecuteFactory;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 import com.zaxxer.hikari.metrics.PoolStats;
 import com.zaxxer.hikari.metrics.dropwizard.CodahaleHealthChecker;
+import com.zaxxer.hikari.metrics.dropwizard.CodahaleMetricsExecuteFactory;
 import com.zaxxer.hikari.metrics.dropwizard.CodahaleMetricsTrackerFactory;
 import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTrackerFactory;
 import com.zaxxer.hikari.util.ConcurrentBag;
@@ -257,6 +259,7 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
          logPoolState("After shutdown ");
          handleMBeans(this, false);
          metricsTracker.close();
+         metricsExecute.close();
       }
    }
 
@@ -288,6 +291,7 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
    {
       if (metricRegistry != null && safeIsAssignableFrom(metricRegistry, "com.codahale.metrics.MetricRegistry")) {
          setMetricsTrackerFactory(new CodahaleMetricsTrackerFactory((MetricRegistry) metricRegistry));
+         setMetricsExecuteFactory(new CodahaleMetricsExecuteFactory((MetricRegistry) metricRegistry));
       }
       else if (metricRegistry != null && safeIsAssignableFrom(metricRegistry, "io.micrometer.core.instrument.MeterRegistry")) {
          setMetricsTrackerFactory(new MicrometerMetricsTrackerFactory((MeterRegistry) metricRegistry));
@@ -825,6 +829,12 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
       public PoolInitializationException(Throwable t)
       {
          super("Failed to initialize pool: " + t.getMessage(), t);
+      }
+   }
+
+   public void setMetricsExecuteFactory(MetricsExecuteFactory metricsExecuteFactory) {
+      if (metricsExecuteFactory != null) {
+         this.metricsExecute = metricsExecuteFactory.create(config.getPoolName(), getPoolStats());
       }
    }
 }
